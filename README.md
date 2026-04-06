@@ -15,9 +15,9 @@ The search bar is the main entry point for the search flow, extra logic is added
 * Input is debounced to prevent the logic from re-running on every keystroke while the user is typing
 
 ## 2.2 Custom Search
-The search checks for: name, industry, CEO name, headquarters simultaneously. Included extras are:
+The search checks for: name, industry, CEO name ..etc. It searches for all fields simultaneously. Included extras are:
 * Case-insensitivity for all fields
-* Numeric queries such as <1990 or >2000
+* Numeric queries such as founded_year > 2010
 
 ## 2.3 Filtering
 The app uses AND logic for filtering, a company must match all selected criteria to be displayed. Supported filters include:
