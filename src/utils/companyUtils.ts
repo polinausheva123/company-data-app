@@ -68,7 +68,7 @@ export const searchCompanies = (
 export const sortCompanies = (
   companies: Company[],
   field: string,
-  order: SortOrder.ASC | SortOrder.DESC,
+  order: SortOrder,
 ): Company[] => {
   const sortedCompanies = [...companies];
 
