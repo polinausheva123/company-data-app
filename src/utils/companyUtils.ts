@@ -7,12 +7,12 @@ export const searchCompanies = (
   searchText: string,
 ): Company[] => {
   const query = searchText.toLowerCase().trim();
-  if (!query) return companies;
+  if (query.length < 3) return companies;
 
   const results: Company[] = [];
 
   const regMatch = query.match(
-    /(founded_year|revenue|net_income)\s*([<>])\s*(\d+)/,
+    /(founded_year|revenue|net_income)\s*([<>])\s*(\d+)/i,
   );
 
   for (let i = 0; i < companies.length; i++) {
@@ -20,17 +20,24 @@ export const searchCompanies = (
     let isMatch = false;
 
     if (regMatch) {
-      const [_, field, operator, valueStr] = regMatch;
-      const targetNum = parseFloat(valueStr);
+      const field = regMatch[1];
+      const operator = regMatch[2];
+      const targetNum = parseFloat(regMatch[3]);
+
       let value = 0;
 
       if (field === "founded_year") value = company.foundedYear;
       if (field === "revenue") value = company.financials.revenue;
       if (field === "net_income") value = company.financials.netIncome;
 
-      if (operator === ">" && value > targetNum) isMatch = true;
-      if (operator === "<" && value < targetNum) isMatch = true;
-    } else {
+      if (operator === ">") {
+        isMatch = value > targetNum;
+      } else if (operator === "<") {
+        isMatch = value < targetNum;
+      }
+    }
+
+    if (!isMatch) {
       const searchableValues = [
         company.name,
         company.industry,
@@ -41,8 +48,9 @@ export const searchCompanies = (
       ];
 
       for (let j = 0; j < searchableValues.length; j++) {
-        const val = String(searchableValues[j]).toLowerCase();
-        if (val.indexOf(query) !== -1) {
+        const fieldValue = String(searchableValues[j]).toLowerCase();
+
+        if (fieldValue.indexOf(query) !== -1) {
           isMatch = true;
           break;
         }
