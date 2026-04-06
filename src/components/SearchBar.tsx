@@ -28,7 +28,7 @@ export const SearchBar = ({ value, onChange }: SearchBarProps) => {
         <Text style={[styles.subTitle, isTooShort && styles.hintText]}>
           {isTooShort
             ? "Please enter minimum 3 characters"
-            : "Find by name, CEO or revenue"}
+            : "Search by all properties.."}
         </Text>
       </View>
     </View>

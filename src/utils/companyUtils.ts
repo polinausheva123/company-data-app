@@ -11,35 +11,38 @@ export const searchCompanies = (
 
   const results: Company[] = [];
 
-  const isGreater = query.startsWith(">");
-  const isLess = query.startsWith("<");
-  const numericQuery =
-    isGreater || isLess ? parseFloat(query.substring(1).trim()) : NaN;
+  const regMatch = query.match(
+    /(founded_year|revenue|net_income)\s*([<>])\s*(\d+)/,
+  );
 
   for (let i = 0; i < companies.length; i++) {
     const company = companies[i];
     let isMatch = false;
 
-    const searchableText =
-      `${company.name} ${company.industry} ${company.country} ${company.details.ceoName}`.toLowerCase();
+    if (regMatch) {
+      const [_, field, operator, valueStr] = regMatch;
+      const targetNum = parseFloat(valueStr);
+      let value = 0;
 
-    if (searchableText.includes(query)) {
-      isMatch = true;
-    }
+      if (field === "founded_year") value = company.foundedYear;
+      if (field === "revenue") value = company.financials.revenue;
+      if (field === "net_income") value = company.financials.netIncome;
 
-    if (!isMatch && !isNaN(numericQuery)) {
-      const numericFields = [
-        company.foundedYear,
-        company.financials.revenue,
-        company.financials.netIncome,
+      if (operator === ">" && value > targetNum) isMatch = true;
+      if (operator === "<" && value < targetNum) isMatch = true;
+    } else {
+      const searchableValues = [
+        company.name,
+        company.industry,
+        company.country,
+        company.details.ceoName,
+        company.details.headquarters,
+        String(company.foundedYear),
       ];
 
-      for (let j = 0; j < numericFields.length; j++) {
-        const number = numericFields[j];
-        if (
-          (isGreater && number > numericQuery) ||
-          (isLess && number < numericQuery)
-        ) {
+      for (let j = 0; j < searchableValues.length; j++) {
+        const val = String(searchableValues[j]).toLowerCase();
+        if (val.indexOf(query) !== -1) {
           isMatch = true;
           break;
         }

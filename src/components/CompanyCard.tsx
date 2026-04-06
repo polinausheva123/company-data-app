@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { COLORS, FONTS, RADIUS } from "../../constants/theme";
 import { Company } from "../types/company";
+import { formatCurrency } from "../utils/formatCurrency";
 
 interface Props {
   company: Company;
@@ -41,7 +42,9 @@ export const CompanyCard = ({ company }: Props) => {
       <View style={styles.statsRow}>
         <View style={styles.stat}>
           <Text style={styles.statLabel}>Revenue</Text>
-          <Text style={styles.statValue}>${company.financials.revenue / 1000000}M</Text>
+          <Text style={styles.statValue}>
+            {formatCurrency(company.financials.revenue)}
+          </Text>
         </View>
         <View style={styles.stat}>
           <Text style={styles.statLabel}>Net Income</Text>
@@ -57,17 +60,24 @@ export const CompanyCard = ({ company }: Props) => {
             ]}
           >
             {company.financials.netIncome >= 0 ? "+" : ""}
-            {company.financials.netIncome}M
+            {formatCurrency(company.financials.netIncome)}
           </Text>
         </View>
         <View style={styles.stat}>
           <Text style={styles.statLabel}>Founded</Text>
           <Text style={styles.statValue}>{company.foundedYear}</Text>
         </View>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Revenue</Text>
+          <Text style={styles.statValue}>
+            {formatCurrency(company.financials.revenue)}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>CEO: {company.details.ceoName}</Text>
+        <Text style={styles.footerText}>Size: {company.details.size}</Text>
         <Text style={styles.footerText} numberOfLines={1}>
           {company.details.headquarters}
         </Text>
